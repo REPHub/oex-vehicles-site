@@ -1,6 +1,6 @@
 const V = new Vue({
   el: '#app',
-  data() {
+  data () {
     return {
       data: {
         cars: null,
@@ -39,19 +39,19 @@ const V = new Vue({
             V.dialog = true
             V.drawer = false
           }
-        },
-        
+        }
+
       ]
     }
   },
   methods: {
-    loadCars(x) {
+    loadCars (x) {
       fetch('https://oex.glitch.me/nc/cars')
         .then(resp => resp.json())
         .then(data => this.data.cars = data)
         .then(() => { if (x) x() })
     },
-    loadNeeds() {
+    loadNeeds () {
       fetch('https://oex.glitch.me/nc/needs')
         .then(resp => resp.json())
         .then(data => {
@@ -62,7 +62,7 @@ const V = new Vue({
           this.data.cars.forEach(car => {
             var carNeeds = { name: car.name, id: car.id, needs: [] }
             carNeeds.needs = data.filter(need => need.cardId === car.id)
-            if (carNeeds.needs.length != 0) nestedList.push(carNeeds)
+            if (carNeeds.needs.length !== 0) nestedList.push(carNeeds)
           })
           // This Is the supplies list list
           nestedList.push({ name: 'Shop Supplies', id: '', needs: data.filter(need => need.cardId === '5a15e520c678987acecd583f') })
@@ -70,7 +70,7 @@ const V = new Vue({
           this.data.needs = nestedList
         })
     },
-    checkItem(id, cardId) {
+    checkItem (id, cardId) {
       var loc = 'nc'
       var cardReference = this.data.needs.find(x => x.id === cardId) || this.data.needs[this.data.needs.length - 1]
       var needChecked = cardReference.needs.find(x => x.id === id).checked

@@ -41,7 +41,7 @@
                 </v-list>
                 <v-list class="pt-0" dense>
                     <v-divider></v-divider>
-                    <v-list-tile ripple v-for="item in navItems" :key="item.title" href="/" @click.native.stop="item.function">
+                    <v-list-tile ripple v-for="item in navItems" :key="item.title" href="#" @click.native.stop="item.function">
                         <v-list-tile-action>
                             <v-icon>{{ item.icon }}</v-icon>
                         </v-list-tile-action>

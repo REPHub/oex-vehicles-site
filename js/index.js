@@ -1,21 +1,17 @@
+const server = 'https://oex.glitch.me'
 const V = new Vue({
-  el: '#app',
-  data () {
+  data() {
     return {
-      data: {
-        cars: null,
-        needs: null
-      },
+      data: { cars: null, needs: null },
       activeCars: true,
-      dialog: false,
       drawer: false,
       mini: true,
+      dialog: false,
       navItems: [
         {
           title: 'NC Cars',
           icon: 'directions_car',
           function: () => {
-            console.log('Looking at Cars')
             V.loadCars()
             V.activeCars = true
             V.drawer = false
@@ -25,7 +21,6 @@ const V = new Vue({
           title: 'NC Needs',
           icon: 'shopping_cart',
           function: () => {
-            console.log('Looking at Needs')
             V.loadNeeds()
             V.activeCars = false
             V.drawer = false
@@ -35,7 +30,6 @@ const V = new Vue({
           title: 'Informaton',
           icon: 'info',
           function: () => {
-            console.log('Looking at Info')
             V.dialog = true
             V.drawer = false
           }
@@ -45,14 +39,16 @@ const V = new Vue({
     }
   },
   methods: {
-    loadCars (x) {
-      fetch('https://oex.glitch.me/nc/cars')
+    loadCars(x) {
+      fetch(server + '/nc/cars')
         .then(resp => resp.json())
-        .then(data => this.data.cars = data)
-        .then(() => { if (x) x() })
+        .then(data => {
+          this.data.cars = data
+          if (x) x()
+        })
     },
-    loadNeeds () {
-      fetch('https://oex.glitch.me/nc/needs')
+    loadNeeds() {
+      fetch(server + '/nc/needs')
         .then(resp => resp.json())
         .then(data => {
           // Add Checkbox model
@@ -70,17 +66,17 @@ const V = new Vue({
           this.data.needs = nestedList
         })
     },
-    checkItem (id, cardId) {
+    checkItem(id, cardId) {
       var loc = 'nc'
+      // Currently Gets the correct card, or the last card which is the supplies list
       var cardReference = this.data.needs.find(x => x.id === cardId) || this.data.needs[this.data.needs.length - 1]
       var needChecked = cardReference.needs.find(x => x.id === id).checked
       var state = needChecked ? 'complete' : 'incomplete'
-      console.log(state)
-      var url = `https://oex.glitch.me/nc/check?loc=${loc}&state=${state}&cardId=${cardId}&checkitemId=${id}`
+      var url = server + `/nc/check?loc=${loc}&state=${state}&cardId=${cardId}&checkitemId=${id}`
       fetch(url).then(resp => console.log(resp.json()))
     }
   }
-})
+}).$mount('#app')
 
 // Application Init
 V.loadCars(V.loadNeeds)

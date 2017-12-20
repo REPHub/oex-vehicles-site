@@ -1,1 +1,18 @@
-[v-cloak] {display: none}
+[v-cloak] {
+    display: none
+}
+
+fade-enter-active,
+.fade-leave-active {
+    transition-property: opacity;
+    transition-duration: 0.55s;
+}
+
+.fade-enter-active {
+    transition-delay: 0.55s;
+}
+
+.fade-enter,
+.fade-leave-active {
+    opacity: 0;
+}

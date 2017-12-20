@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>OEX NC Vehicles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'>
+    <link rel='stylesheet prefetch' href='https://unpkg.com/vuetify@0.17.4/dist/vuetify.min.css'>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="shortcut icon" type="image/png" href="iconOrig.png" />
+</head>
+
+<body>
+    <div v-cloak id="app">
+        <v-app id="inspire">
+            <!-- Toolbar -->
+            <v-toolbar dark dense flat color="green">
+                <v-toolbar-side-icon @click.native.stop="drawer = !drawer"></v-toolbar-side-icon>
+                <v-toolbar-title class="white--text">Vehicle Status</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn flat href='https://trello.com/b/mapqCmvW/oex-nc'>Trello</v-btn>
+            </v-toolbar>
+
+            <!-- Navigation Drawer -->
+            <v-navigation-drawer temporary :mini-variant.sync="mini" v-model="drawer" light absolute>
+                <v-list class="pa-1">
+                    <v-list-tile avatar>
+                        <v-list-tile-avatar>
+                            <img src="/assets/icon96.png" />
+                        </v-list-tile-avatar>
+                        <v-list-tile-content>
+                            <v-list-tile-title>Vehicle Status</v-list-tile-title>
+                        </v-list-tile-content>
+                        <v-spacer></v-spacer>
+                        <v-btn v-if="!mini" icon @click.native.stop="mini = true">
+                            <v-icon>keyboard_arrow_left</v-icon>
+                        </v-btn>
+                    </v-list-tile>
+                </v-list>
+                <v-list class="pt-0" dense>
+                    <v-divider></v-divider>
+                    <v-list-tile ripple v-for="item in navItems" :key="item.title" @click.native.stop="item.function">
+                        <v-list-tile-action>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                    <v-list-tile ripple href="https://trello.com/c/VdYyLUDh/5-materials-needed">
+                            <v-list-tile-action>
+                                <v-icon>build</v-icon>
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>Shop Supplies</v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                </v-list>
+            </v-navigation-drawer>
+
+            <!-- Cars List -->
+            <v-container fluid style="min-height: 0;" grid-list-lg>
+                <v-layout row>
+                    <v-flex xs12 sm6 offset-sm3>
+                        <v-card>
+                            <v-list one-line>
+                                <!-- If we wanna see cars -->
+                                <template v-if="activeCars" v-for="(item, index) in data.cars">
+                                    <v-list-tile avatar ripple :href="item.url" :key="item.title">
+                                        <v-list-tile-content>
+                                            <v-list-tile-title :style="{backgroundColor: item.color}">{{ item.name }}</v-list-tile-title>
+                                        </v-list-tile-content>
+                                    </v-list-tile>
+                                    <v-divider v-if="index + 1 < data.cars.length" :key="item.title"></v-divider>
+                                </template>
+
+
+                                <!-- If we wanna see needs -->
+                                <template v-if="!activeCars" v-for="(list, index) in data.needs">
+                                    <v-list one-line subheader>
+                                        <v-subheader>{{ list.name }}</v-subheader>
+                                        <v-list-tile avatar v-for="(item, index) in list.needs" :key="item.name">
+                                            <v-list-tile-action>
+                                                <v-checkbox v-model="item.checked" @click.native.stop="checkItem(item.id, item.cardId)"></v-checkbox>
+                                            </v-list-tile-action>
+                                            <v-list-tile-content>
+                                                <v-list-tile-title :style="{backgroundColor: item.color}">{{ item.name }}</v-list-tile-title>
+                                            </v-list-tile-content>
+                                        </v-list-tile>
+                                        </v-list-tile>
+                                    </v-list>
+                                    <v-divider v-if="index + 1 < data.needs.length"></v-divider>
+                                </template>
+                            </v-list>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+
+            <!-- Info Dialog -->
+            <v-dialog v-model="dialog" max-width="290">
+                <v-card>
+                    <v-card-title class="headline">Color Key</v-card-title>
+                    <v-card-text>
+                        <li style="background-color: red">
+                            <strong>Red - Disabled</strong>
+                        </li>
+                        <li style="background-color: orange">
+                            <strong>Orange - Needs Service</strong>
+                        </li>
+                        <li style="background-color: yellow">
+                            <strong>Yellow - Minor Issues</strong>
+                        </li>
+                        <li style="background-color: green">
+                            <strong>Green - Ready</strong>
+                        </li>
+                        <li style="background-color: inherit">
+                            <strong>White - Ready</strong>
+                        </li>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn dark color="green darken-1" @click.native.stop="dialog = false">Got It!</v-btn>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-app>
+    </div>
+    <script src='https://unpkg.com/vue/dist/vue.js'></script>
+    <script src='https://unpkg.com/vuetify@0.17.4/dist/vuetify.min.js'></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "Vechicle Status",
+  "short_name": "OEX Car Status",
+  "display": "standalone",
+  "background_color": "green",
+  "description": "A simple app to get your quick vehicle status from trello",
+  "icons": [{
+    "src": "assets/icon48.png",
+    "sizes": "48x48",
+    "type": "image/png"
+  }, {
+    "src": "assets/icon72.png",
+    "sizes": "72x72",
+    "type": "image/png"
+  }, {
+    "src": "assets/icon96.png",
+    "sizes": "96x96",
+    "type": "image/png"
+  }, {
+    "src": "assets/icon144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  }]
+} 

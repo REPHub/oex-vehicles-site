@@ -73,6 +73,7 @@ const V = new Vue({
       var needChecked = cardReference.needs.find(x => x.id === id).checked
       var state = needChecked ? 'complete' : 'incomplete'
       var url = server + `/nc/check?loc=${loc}&state=${state}&cardId=${cardId}&checkitemId=${id}`
+      console.log(url)
       fetch(url).then(resp => console.log(resp.json()))
     }
   }

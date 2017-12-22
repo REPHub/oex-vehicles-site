@@ -22,7 +22,7 @@ const V = new Vue({
       ],
       title: 'Vehicle Status',
       data: { cars: null, needs: null },
-      activeCars: false,
+      activeCars: true,
       drawer: false,
       mini: true,
       dialog: false,

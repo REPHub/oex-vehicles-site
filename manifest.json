@@ -9,7 +9,7 @@
   "description": "A simple app to get your quick vehicle status from trello",
   "scope": "/",
   "serviceworker": {
-    "src": "js/sw.js",
+    "src": "sw.js",
     "scope": "/",
     "use_cache": true
 },

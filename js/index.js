@@ -26,6 +26,7 @@ const V = new Vue({
       drawer: false,
       mini: true,
       dialog: false,
+      brokeDialog: false,
       navItems: [
         {
           title: 'Vehicles',
@@ -79,6 +80,9 @@ const V = new Vue({
       fetch(server + `/${this.location.toLowerCase()}/cars`)
         .then(resp => resp.json())
         .then(data => {
+          if (data[2] == undefined) {
+            this.brokeDialog = true
+          }
           this.data.cars = data
           if (x) x()
         })
@@ -87,24 +91,20 @@ const V = new Vue({
       fetch(server + `/${this.location.toLowerCase()}/needs`)
         .then(resp => resp.json())
         .then(data => {
-          data.forEach(x => x.checked = false) // Checkbox's modle
-          var nestedList = []
-          this.data.cars.forEach(car => {
-            var carNeeds = { name: car.name, id: car.id, needs: [] }
-            carNeeds.needs = data.filter(need => need.cardId === car.id)
-            if (carNeeds.needs.length !== 0) nestedList.push(carNeeds)
+          data.forEach(x => x.checkItems.forEach(x => x.checked = false)) // Checkbox's model
+          data.forEach(l => {
+            var relatedCar = this.data.cars.find(car => car.id == l.idCard)
+            l.name = relatedCar ? relatedCar.name : 'Supplies List'
           })
-          // This Is the supplies list list
-          nestedList.push({ name: 'Shop Supplies', id: '', needs: data.filter(need => need.cardId === '5a15e520c678987acecd583f') })
-          this.data.needs = nestedList // Inset into data store
+          this.data.needs = data
         })
     },
-    checkItem(id, cardId) {
+    checkItem(id, idCard) {
       // Gets the associated card, or the last card (which is the supplies list)
-      var cardReference = this.data.needs.find(x => x.id === cardId) || this.data.slice(-1)[0]
-      var needChecked = cardReference.needs.find(x => x.id === id).checked
+      var checkListReference = this.data.needs.find(x => x.id === idCard) || this.data.needs.slice(-1)[0]
+      var needChecked = checkListReference.checkItems.find(x => x.id === id).checked
       var state = needChecked ? 'complete' : 'incomplete'
-      var url = server + `/${this.location.toLowerCase()}/check?loc=${this.location.toLowerCase()}&state=${state}&cardId=${cardId}&checkitemId=${id}`
+      var url = server + `/${this.location.toLowerCase()}/check?loc=${this.location.toLowerCase()}&state=${state}&idCard=${idCard}&checkitemId=${id}`
       console.log(url)
       fetch(url).then(resp => console.log(resp.json()))
     }

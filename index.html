@@ -86,11 +86,11 @@
                                 <template v-if="!activeCars" v-for="(list, index) in data.needs">
                                     <v-list subheader>
                                         <v-subheader>{{ list.name }}</v-subheader>
-                                        <v-card tile flat v-for="(item, index) in list.needs" :key="item.name">
+                                        <v-card tile flat v-for="(item, index) in list.checkItems" :key="item.name">
                                             <v-container fluid align-center grid-list-md>
                                                 <v-layout row>
                                                     <v-flex xs2 d-flex align-center justify-center>
-                                                        <v-checkbox v-model="item.checked" @click.native.stop="checkItem(item.id, item.cardId)" style="width: auto; min-width: 0; flex: 0 0;"></v-checkbox>
+                                                        <v-checkbox v-model="item.checked" @click.native.stop="checkItem(item.id, list.idCard)" style="width: auto; min-width: 0; flex: 0 0;"></v-checkbox>
                                                     </v-flex>
                                                     <v-flex xs10>
                                                         <div>{{ item.name }}</div>
@@ -131,6 +131,22 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn dark color="green darken-1" @click.native.stop="dialog = false">Got It!</v-btn>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+            <!-- In Development Dialog -->
+            <v-dialog v-model="brokeDialog" max-width="290">
+                <v-card>
+                    <v-card-title class="headline">Development Notice</v-card-title>
+                    <v-card-text>
+                        Major changes are being made to this application, check back soon for full functionality!
+                        <br>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn dark color="green darken-1" @click.native.stop="brokeDialog = false">Got It!</v-btn>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>

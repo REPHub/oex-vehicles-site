@@ -2,8 +2,9 @@ var CACHE_NAME = 'TheOEXCache'
 var urlsToCache = [
   // '/',
   // '/index.html',
-  // 'css/style.css',
-  // 'css/nav.css',
+  'css/style.css',
+  'LICENSE',
+  
   // '/index.js'
 ]
 

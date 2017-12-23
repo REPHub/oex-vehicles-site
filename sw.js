@@ -1,14 +1,12 @@
 var CACHE_NAME = 'OEXCache'
 var urlsToCache = [
-  // '/',
-  // '/index.html',
-  'assets/icon144.png',
-  'assets/icon48.png',
-  'assets/icon72.png',
-  'assets/icon96.png',
-  'assets/iconOrig.png',
-  'css/style.css'
-  // '/index.js'
+  '/index.html',
+  '/assets/icon144.png',
+  '/assets/icon48.png',
+  '/assets/icon72.png',
+  '/assets/icon96.png',
+  '/assets/iconOrig.png',
+  '/css/style.css'
 ]
 
 // Perform install steps

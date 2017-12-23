@@ -70,8 +70,9 @@ const V = new Vue({
   watch: {
     // whenever question changes, this function will run
     location: function () {
-      if (this.location === 'CT') {
+      if (this.location === this.locations[1].text) {
         alert(this.location + ' (Conneticut) Information is not prepared yet, so we will show NC data for now')
+        this.location = 'NC'
       }
     }
   },

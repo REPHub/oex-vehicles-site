@@ -1,10 +1,13 @@
-var CACHE_NAME = 'TheOEXCache'
+var CACHE_NAME = 'OEXCache'
 var urlsToCache = [
   // '/',
   // '/index.html',
-  'css/style.css',
-  'LICENSE',
-  
+  'assets/icon144.png',
+  'assets/icon48.png',
+  'assets/icon72.png',
+  'assets/icon96.png',
+  'assets/iconOrig.png',
+  'css/style.css'
   // '/index.js'
 ]
 

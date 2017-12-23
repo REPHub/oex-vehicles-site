@@ -13,7 +13,7 @@ if ('serviceWorker' in navigator) {
 
 const server = 'https://oex.glitch.me'
 const V = new Vue({
-  data() {
+  data () {
     return {
       location: 'NC',
       locations: [
@@ -77,30 +77,30 @@ const V = new Vue({
     }
   },
   methods: {
-    loadCars(x) {
+    loadCars (x) {
       fetch(server + `/${this.location.toLowerCase()}/cars`)
         .then(resp => resp.json())
         .then(data => {
-          if (data[2] == undefined) {
+          if (data[2] === undefined) {
             this.brokeDialog = true
           }
           this.data.cars = data
           if (x) x()
         })
     },
-    loadNeeds() {
+    loadNeeds () {
       fetch(server + `/${this.location.toLowerCase()}/needs`)
         .then(resp => resp.json())
         .then(data => {
           data.forEach(x => x.checkItems.forEach(x => x.checked = false)) // Checkbox's model
           data.forEach(l => {
-            var relatedCar = this.data.cars.find(car => car.id == l.idCard)
+            var relatedCar = this.data.cars.find(car => car.id === l.idCard)
             l.name = relatedCar ? relatedCar.name : 'Supplies List'
           })
           this.data.needs = data
         })
     },
-    checkItem(id, idCard) {
+    checkItem (id, idCard) {
       // Gets the associated card, or the last card (which is the supplies list)
       var checkListReference = this.data.needs.find(x => x.id === idCard) || this.data.needs.slice(-1)[0]
       var needChecked = checkListReference.checkItems.find(x => x.id === id).checked

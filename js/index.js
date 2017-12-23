@@ -1,7 +1,7 @@
 // Initialize Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').then(function (registration) {
+    navigator.serviceWorker.register('service-worker.js').then(function (registration) {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope)
     }, function (err) {
@@ -10,6 +10,21 @@ if ('serviceWorker' in navigator) {
     })
   })
 }
+
+window.addEventListener('load', function() {
+  function updateOnlineStatus(event) {
+    if (navigator.onLine) {
+      // handle online status
+      console.log('online');
+    } else {
+      // handle offline status
+      console.log('offline');
+      alert('Just Wanted to inform you, that you are offline. As of this moment, a connection is needed to get the newest vehicle data.')
+    }
+  }
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+});
 
 const server = 'https://oex.glitch.me'
 const V = new Vue({

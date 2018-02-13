@@ -11,7 +11,7 @@ if ('serviceWorker' in navigator) {
   })
 }
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
   function updateOnlineStatus(event) {
     if (navigator.onLine) {
       // handle online status
@@ -26,17 +26,26 @@ window.addEventListener('load', function() {
   window.addEventListener('offline', updateOnlineStatus);
 });
 
-const server = 'https://oex2.glitch.me'
+const f = (url, callback) => fetch(url).then(resp => resp.json()).then(d => callback(d))
+
+const server = 'https://oex.glitch.me'
 const V = new Vue({
-  data () {
+  data() {
     return {
-      location: (() => (localStorage['location'] == undefined) ? 'NC' : localStorage['location'])(),
-      locations: [
-        { text: 'NC' },
-        { text: 'VA' },
-        { text: 'CT' }
-      ],
       title: 'Vehicle Status',
+      locations: [
+        {
+          text: 'NC',
+          boardUrl: 'https://trello.com/b/mapqCmvW/oex-nc',
+          suppliesUrl: 'https://trello.com/c/VdYyLUDh/5-materials-needed'
+        },
+        {
+          text: 'VA',
+          boardUrl: 'https://trello.com/b/Pyu8zJ2n/oex-va',
+          suppliesUrl: 'https://trello.com/c/LSusYYhe/8-parts-and-task-needed'
+        }
+      ],
+      location: (localStorage['location'] == undefined) ? 'NC' : localStorage['location'],
       data: { cars: null, needs: null },
       activeCars: true,
       drawer: false,
@@ -73,7 +82,7 @@ const V = new Vue({
         {
           title: 'Shop Supplies',
           icon: 'build',
-          href: 'https://trello.com/c/VdYyLUDh/5-materials-needed'
+          function: () => {}
         }
       ]
     }
@@ -81,45 +90,42 @@ const V = new Vue({
   computed: {
     locationTitle: function () {
       return this.title + ' ' + this.location
+    },
+    boardUrl: function () {
+      return this.locations.find(x => x.text === this.location).boardUrl
+    },
+    suppliesUrl: function () {
+      return this.locations.find(x => x.text === this.location).suppliesUrl
     }
   },
   watch: {
     // whenever question changes, this function will run
     location: function () {
       localStorage['location'] = this.location
-      if (this.location === "CT") {
-        alert(this.location + ' (Conneticut) Information is not prepared yet, so we cannot show its data for now')
-        this.location = localStorage['location']
-      } else {
-        V.init()
-      }
+      V.init()
     }
   },
   methods: {
-    loadCars (x) {
-      fetch(server + `/${this.location.toLowerCase()}/cars`)
-        .then(resp => resp.json())
-        .then(data => {
-          if (data[2] === undefined) {
-            this.brokeDialog = true
-          }
-          this.data.cars = data
-          if (x) x()
-        })
+    loadCars(x) {
+      f(server + `/${this.location.toLowerCase()}/cars`, data => {
+        if (data[2] === undefined) {
+          this.brokeDialog = true
+        }
+        this.data.cars = data
+        if (x) x()
+      })
     },
-    loadNeeds () {
-      fetch(server + `/${this.location.toLowerCase()}/needs`)
-        .then(resp => resp.json())
-        .then(data => {
-          data.forEach(x => x.checkItems.forEach(x => x.checked = false)) // Checkbox's model
-          data.forEach(l => {
-            var relatedCar = this.data.cars.find(car => car.id === l.idCard)
-            l.name = relatedCar ? relatedCar.name : 'Supplies List'
-          })
-          this.data.needs = data
+    loadNeeds() {
+      f(server + `/${this.location.toLowerCase()}/needs`, data => {
+        data.forEach(x => x.checkItems.forEach(x => x.checked = false)) // Checkbox's model
+        data.forEach(l => {
+          var relatedCar = this.data.cars.find(car => car.id === l.idCard)
+          l.name = relatedCar ? relatedCar.name : 'Supplies List'
         })
+        this.data.needs = data
+      })
     },
-    checkItem (id, idCard) {
+    checkItem(id, idCard) {
       // Gets the associated card, or the last card (which is the supplies list)
       var checkListReference = this.data.needs.find(x => x.id === idCard) || this.data.needs.slice(-1)[0]
       var needChecked = checkListReference.checkItems.find(x => x.id === id).checked

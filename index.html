@@ -21,7 +21,7 @@
                 <v-toolbar-title class="hidden-sm-and-down" v-text="locationTitle"></v-toolbar-title>
                 <v-toolbar-title class="hidden-md-and-up" v-text="location + ' Status'"></v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn flat href='https://trello.com/b/mapqCmvW/oex-nc'>Trello</v-btn>
+                <v-btn flat :href='boardUrl'>Trello</v-btn>
             </v-toolbar>
 
             <!-- Navigation Drawer -->
@@ -42,7 +42,8 @@
                 </v-list>
                 <v-divider></v-divider>
                 <v-list>
-                    <v-list-tile v-for="item in navItems" :key="item.title" :href="item.href ? item.href : '#'" @click.native.stop="item.function">
+                    <v-list-tile v-for="item in navItems" :key="item.title" :href="item.title == 'Shop Supplies' ? suppliesUrl : '#'"
+                        @click.native.stop="item.function">
                         <v-list-tile-action>
                             <v-icon>{{ item.icon }}</v-icon>
                         </v-list-tile-action>

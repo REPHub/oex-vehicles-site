@@ -26,13 +26,14 @@ window.addEventListener('load', function() {
   window.addEventListener('offline', updateOnlineStatus);
 });
 
-const server = 'https://oex.glitch.me'
+const server = 'https://oex2.glitch.me'
 const V = new Vue({
   data () {
     return {
-      location: 'NC',
+      location: (() => (localStorage['location'] == undefined) ? 'NC' : localStorage['location'])(),
       locations: [
         { text: 'NC' },
+        { text: 'VA' },
         { text: 'CT' }
       ],
       title: 'Vehicle Status',
@@ -85,9 +86,12 @@ const V = new Vue({
   watch: {
     // whenever question changes, this function will run
     location: function () {
-      if (this.location === this.locations[1].text) {
-        alert(this.location + ' (Conneticut) Information is not prepared yet, so we will show NC data for now')
-        this.location = 'NC'
+      localStorage['location'] = this.location
+      if (this.location === "CT") {
+        alert(this.location + ' (Conneticut) Information is not prepared yet, so we cannot show its data for now')
+        this.location = localStorage['location']
+      } else {
+        V.init()
       }
     }
   },
@@ -123,9 +127,12 @@ const V = new Vue({
       var url = server + `/${this.location.toLowerCase()}/check?loc=${this.location.toLowerCase()}&state=${state}&idCard=${idCard}&checkitemId=${id}`
       console.log(url)
       fetch(url).then(resp => console.log(resp.json()))
+    },
+    init() {
+      V.loadCars(V.loadNeeds)
     }
   }
 }).$mount('#app')
 
 // Application Init
-V.loadCars(V.loadNeeds)
+V.init()
